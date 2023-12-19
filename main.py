@@ -1,11 +1,14 @@
-from support import load_llm, generate_quote, generate_caption
+from support import load_llm, generate_quote, generate_caption, generate_image
 
-topic = "The secret of living is giving."
+topic = "A group of children playing in a park"
 llm = load_llm()
-quote = generate_quote(llm, topic)
-caption = generate_caption(llm, quote)
+# quote = generate_quote(llm, topic)
+caption = generate_caption(llm, topic)
+print(caption.encode('ascii', 'ignore'))
+image_path = generate_image(caption)
 
 print({
-    "quote": quote.encode('ascii', 'ignore'),
-    "caption": caption.encode('ascii', 'ignore')
+    "topic": topic,
+    "caption": caption.encode('ascii', 'ignore'),
+    "image_path": image_path
 })
