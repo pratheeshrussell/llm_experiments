@@ -18,15 +18,22 @@ args = {
     "guidance_scale": 1,
 }
 
-model_path="./models/image_models/"
+# To use from local path use this
+model_path="./models/epicrealism.safetensors"
+pipe=StableDiffusionPipeline.from_single_file(
+    model_path, 
+    use_safetensors=True,
+    load_safety_checker=False,
+    local_files_only=True)
+
 # emilianJR/epiCRealism
 # runwayml/stable-diffusion-v1-5
 repo_path="emilianJR/epiCRealism"
-
-pipe = StableDiffusionPipeline.from_pretrained(
-    repo_path,
-    torch_dtype=torch.float32,
-    use_safetensors=True,)
+# To download from hugging face use the following
+# pipe = StableDiffusionPipeline.from_pretrained(
+#     repo_path,
+#     torch_dtype=torch.float32,
+#     use_safetensors=True,)
 
 image = pipe(**args).images[0]
 
