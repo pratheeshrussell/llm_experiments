@@ -37,3 +37,20 @@ CAPTION_PROMPT = PromptTemplate(
         """
     ).strip(),
 )
+
+
+IMAGE_GEN_PROMPT = PromptTemplate(
+    template_format="jinja2",
+    input_variables=["description"],
+    template=dedent(
+        """
+        Imagine a scene of {description} in full realistic detail. 
+            - Describe whatever is the central focus or subject of the scene first. Write a very detailed multi-sentence verbose description
+            - If there are people or characters present, describe any discernable details like age range, gender, ethnicity, number present, poses, facial emotions, clothing and accessories. 
+            - If no people/characters describe any notable animals, objects, buildings, plantlife or landscape features like trees, forests, fields etc. Describe the arrangement and positions of subjects/features in the scene, lighting conditions, dominant colors and color temperature, any background setting details within the scene composition.
+        ---
+        Description: {{ description }}
+        Image description:
+        """
+    ).strip(),
+)
