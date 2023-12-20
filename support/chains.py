@@ -8,6 +8,7 @@ from datetime import datetime
 from diffusers import StableDiffusionPipeline
 
 import os
+from compel import Compel
 
 def generate_quote(llm: LLM, topic: str) -> str:
     """
@@ -51,11 +52,13 @@ def generate_image(description: str) -> str:
     Generates an image based on the description and returns the path.
     """
     # https://huggingface.co/stablediffusionapi/epicrealism5
-    negative_prompt="painting, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, deformed, ugly, blurry, bad anatomy, bad proportions, extra limbs, cloned face, skinny, glitchy, double torso, extra arms, extra hands, mangled fingers, missing lips, ugly face, distorted face, extra legs, anime"
+    # Atleast an empty "negative_prompt" is needed
+    # Negative prompt taken from seaart ai
+    negative_prompt="verybadimagenegative_v1.3, ng_deepnegative_v1_75t, (ugly face:0.8),cross-eyed,sketches, (worst quality:2), (low quality:2), (normal quality:2), lowres, normal quality, ((monochrome)), ((grayscale)), skin spots, acnes, skin blemishes, bad anatomy, DeepNegative, facing away, tilted head, {Multiple people}, lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worstquality, low quality, normal quality, jpegartifacts, signature, watermark, username, blurry, bad feet, cropped, poorly drawn hands, poorly drawn face, mutation, deformed, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, extra fingers, fewer digits, extra limbs, extra arms,extra legs, malformed limbs, fused fingers, too many fingers, long neck, cross-eyed,mutated hands, polar lowres, bad body, bad proportions, gross proportions, text, error, missing fingers, missing arms, missing legs, extra digit, extra arms, extra leg, extra foot, ((repeating hair))"
     img_width=768
     img_height=768
-    inference_steps=30
-    guidance_scale=7.5
+    inference_steps=20
+    guidance_scale=7
 
     max_length=77 # the size allowed - Dont change
 
@@ -66,43 +69,29 @@ def generate_image(description: str) -> str:
         torch_dtype=torch.float32,
         use_safetensors=True,)
     model_path="models/epicrealism.safetensors"
-  
+    # sometimes it works but mostly this doesn't work
     # pipe=StableDiffusionPipeline.from_single_file(
     #     model_path, 
     #     use_safetensors=True,
     #     load_safety_checker=False)
 
     # Tokenizer long prompt issues
-    input_ids = pipe.tokenizer(
-        description + ' masterpiece, best quality, ultra-detailed', 
-        return_tensors="pt", 
-        truncation=False
-    ).input_ids
-    negative_ids = pipe.tokenizer(
-        negative_prompt, 
-        truncation=False, 
-        padding="max_length",
-        max_length=input_ids.shape[-1], 
-        return_tensors="pt"
-    ).input_ids
-    concat_embeds = []
-    neg_embeds = []
-    for i in range(0, input_ids.shape[-1], max_length):
-        concat_embeds.append(
-            pipe.text_encoder(input_ids[:, i: i + max_length])[0]
-        )
-        neg_embeds.append(
-            pipe.text_encoder(negative_ids[:, i: i + max_length])[0]
-        )
+    compel = Compel(
+        tokenizer=pipe.tokenizer, 
+        text_encoder=pipe.text_encoder,
+        truncate_long_prompts=False
+    )
+    conditioning = compel.build_conditioning_tensor(description)
+    negative_conditioning = compel.build_conditioning_tensor(negative_prompt)
+    [prompt_embeds, negative_prompt_embeds] = compel.pad_conditioning_tensors_to_same_length([conditioning, negative_conditioning])
 
-    prompt_embeds = torch.cat(concat_embeds, dim=1)
-    negative_prompt_embeds = torch.cat(neg_embeds, dim=1)
-    print('Tokens Generated...')
+    print(prompt_embeds.shape)
+    print(negative_prompt_embeds.shape)
     # generate args
-    # "negative_prompt_embeds": negative_prompt_embeds,
+    # Atleast an empty "negative_prompt_embeds" is needed
     new_args = {
         "prompt_embeds":prompt_embeds,
-        
+        "negative_prompt_embeds": negative_prompt_embeds,
         "width": img_width,
         "height": img_height,
         "guidance_scale":guidance_scale,

@@ -2,7 +2,7 @@
 
 ## Install
 ```
-pip install diffusers transformers omegaconf accelerate langchain  llama-cpp-python
+pip install diffusers transformers omegaconf accelerate langchain compel  llama-cpp-python
 ```
 To install torch use the following link (If you have Graphics card use cuda enabled version or cpu only version)  
 https://pytorch.org/get-started/locally/  
@@ -38,6 +38,9 @@ Download and place it in models folder
 * https://github.com/huggingface/diffusers/issues/3694#issuecomment-1593845649
 * https://github.com/huggingface/diffusers/issues/4194#issuecomment-1648741638
 * https://medium.com/mlearning-ai/using-civitai-models-with-diffusers-package-45e0c475a67e
+
+## Upscaler
+* https://stable-diffusion-art.com/ai-upscaler/
 
 ## Issues
 1. Truncated to 77 Tokens
