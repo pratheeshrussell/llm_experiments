@@ -50,41 +50,31 @@ def generate_image(description: str) -> str:
     """
     Generates an image based on the description and returns the path.
     """
-
-    negative_prompt="text, bad anatomy, bad hands, unrealistic, bad pose, bad lighting"
-    img_width=512
-    img_height=512
+    # https://huggingface.co/stablediffusionapi/epicrealism5
+    negative_prompt="painting, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, deformed, ugly, blurry, bad anatomy, bad proportions, extra limbs, cloned face, skinny, glitchy, double torso, extra arms, extra hands, mangled fingers, missing lips, ugly face, distorted face, extra legs, anime"
+    img_width=768
+    img_height=768
     inference_steps=30
-    guidance_scale=1
+    guidance_scale=7.5
 
     max_length=77 # the size allowed - Dont change
 
-    args = {
-        "prompt":description,
-        "width": img_width,
-        "height": img_height,
-        "negative_prompt": negative_prompt,
-        "num_inference_steps": inference_steps,
-        "guidance_scale": guidance_scale,
-        "num_images_per_prompt": 1,
-    }
-
     # Using repo path
-    # repo_path="emilianJR/epiCRealism"
-    # pipe = StableDiffusionPipeline.from_pretrained(
-    #     repo_path,
-    #     torch_dtype=torch.float32,
-    #     use_safetensors=True,)
+    repo_path="Justin-Choo/epiCRealism-Natural_Sin_RC1_VAE"
+    pipe = StableDiffusionPipeline.from_pretrained(
+        repo_path,
+        torch_dtype=torch.float32,
+        use_safetensors=True,)
     model_path="models/epicrealism.safetensors"
   
-    pipe=StableDiffusionPipeline.from_single_file(
-        model_path, 
-        use_safetensors=True,
-        load_safety_checker=False)
+    # pipe=StableDiffusionPipeline.from_single_file(
+    #     model_path, 
+    #     use_safetensors=True,
+    #     load_safety_checker=False)
 
     # Tokenizer long prompt issues
     input_ids = pipe.tokenizer(
-        description, 
+        description + ' masterpiece, best quality, ultra-detailed', 
         return_tensors="pt", 
         truncation=False
     ).input_ids
@@ -107,10 +97,12 @@ def generate_image(description: str) -> str:
 
     prompt_embeds = torch.cat(concat_embeds, dim=1)
     negative_prompt_embeds = torch.cat(neg_embeds, dim=1)
+    print('Tokens Generated...')
     # generate args
+    # "negative_prompt_embeds": negative_prompt_embeds,
     new_args = {
         "prompt_embeds":prompt_embeds,
-        "negative_prompt_embeds": negative_prompt_embeds,
+        
         "width": img_width,
         "height": img_height,
         "guidance_scale":guidance_scale,

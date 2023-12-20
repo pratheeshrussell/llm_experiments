@@ -37,3 +37,8 @@ Download and place it in models folder
 * https://github.com/gabacode/InspirationAI/tree/main
 * https://github.com/huggingface/diffusers/issues/3694#issuecomment-1593845649
 * https://github.com/huggingface/diffusers/issues/4194#issuecomment-1648741638
+* https://medium.com/mlearning-ai/using-civitai-models-with-diffusers-package-45e0c475a67e
+
+## Issues
+1. Truncated to 77 Tokens
+* https://medium.com/mlearning-ai/using-long-prompts-with-the-diffusers-package-with-prompt-embeddings-819657943050

@@ -44,10 +44,13 @@ IMAGE_GEN_PROMPT = PromptTemplate(
     input_variables=["description"],
     template=dedent(
         """
-        Imagine a scene of {description} in full realistic detail. 
-            - Describe whatever is the central focus or subject of the scene first. Write a very detailed multi-sentence verbose description
-            - If there are people or characters present, describe any discernable details like age range, gender, ethnicity, number present, poses, facial emotions, clothing and accessories. 
-            - If no people/characters describe any notable animals, objects, buildings, plantlife or landscape features like trees, forests, fields etc. Describe the arrangement and positions of subjects/features in the scene, lighting conditions, dominant colors and color temperature, any background setting details within the scene composition.
+        Imagine a scene of {description} in full realistic detail. Concisely describe the most salient elements of the scene first in one sentence.  
+        Write an approximately 60 word highly detailed description emulating informative photo captions. 
+        Only include descriptive details that vividly depict important aspects of the scene. 
+        Do not use filler words or extraneous descriptors. 
+        Focus on defining details about subjects/objects, background, positions, colors, lighting, expressions, backgrounds that efficiently create a clear visual of the scene. 
+        The goal is to guide an AI image generation system to render the scene accurately without fluff or distraction. 
+        Keep the description succinct within a 60 word limit. Do not use redundant or unnecessary sentences
         ---
         Description: {{ description }}
         Image description:
