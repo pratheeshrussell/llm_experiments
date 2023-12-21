@@ -44,6 +44,7 @@ Download and place it in models folder
 
 ## Upscaler
 * https://stable-diffusion-art.com/ai-upscaler/
+* https://github.com/ai-forever/Real-ESRGAN
 
 ## Issues
 1. Truncated to 77 Tokens
