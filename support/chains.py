@@ -5,7 +5,7 @@ from support.prompts import QUOTE_PROMPT, CAPTION_PROMPT, IMAGE_GEN_PROMPT
 import gc
 import torch
 from datetime import datetime
-from diffusers import StableDiffusionPipeline
+from diffusers import StableDiffusionPipeline, EulerDiscreteScheduler
 
 import os
 from compel import Compel
@@ -68,6 +68,7 @@ def generate_image(description: str) -> str:
         repo_path,
         torch_dtype=torch.float32,
         use_safetensors=True,)
+    pipe.scheduler = EulerDiscreteScheduler.from_config(pipe.scheduler.config)
     model_path="models/epicrealism.safetensors"
     # sometimes it works but mostly this doesn't work
     # pipe=StableDiffusionPipeline.from_single_file(
