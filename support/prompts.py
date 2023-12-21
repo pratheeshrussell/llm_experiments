@@ -44,13 +44,32 @@ IMAGE_GEN_PROMPT = PromptTemplate(
     input_variables=["description"],
     template=dedent(
         """
-        Imagine a scene of {description} in full realistic detail. Concisely describe the most salient elements of the scene first in one sentence.  
-        Write an approximately 60 word highly detailed description emulating informative photo captions. 
-        Only include descriptive details that vividly depict important aspects of the scene. 
-        Do not use filler words or extraneous descriptors. 
-        Focus on defining details about subjects/objects, background, positions, colors, lighting, expressions, backgrounds that efficiently create a clear visual of the scene. 
-        The goal is to guide an AI image generation system to render the scene accurately without fluff or distraction. 
-        Keep the description succinct within a 60 word limit. Do not use redundant or unnecessary sentences
+        Understanding the scene {description} and imagine the entire environment.
+        Follow the steps given below 
+        - Generate a list of realistic descriptive keywords to illustrate this scene, separated by commas. 
+        - If there are people or characters present, add any discernable details like age range, gender, ethnicity, number present, poses, facial emotions, clothing and accessories as keyword. 
+        - If no people/characters, then add any notable animals, objects, buildings, plantlife or landscape features like trees, forests, fields etc. 
+        - As the descriptors increase in importance to emphazise the essence of the scene, attach additional '+' symbols after each keyword.
+        - If a keyword should be deemphasized in the image, place a '-' symbol after it.
+        - Don't add symbols like '#' and '~' only '+','-',',' are allowed
+        - If an image frame/style is specified, emphasize keywords to depict the scene from that perspective.
+        - Focus the list on pertinent keywords necessary to visualize the scene, with no less than 10 and no more than 25 descriptors
+         
+        The final output should be in this style:
+        Description: group of children playing in park 
+        Image description: trees++, playground, grass, young children+++, laughing++, running++, sunshine+
+        
+        Description: friends talking at dinner table as a wide angle photo  
+        Image description: dinner table+++, friends laughing++, blurred restaurant interior+, glass of wine+, window
+        
+        Description: close up photo of a rabbit in a forest  
+        Image description: close up photo+, rabbit++, forest++, haze, halation, bloom, dramatic atmosphere, centred, rule of thirds, 200mm 1.4f macro shot
+        
+        Description: offroad vehicle  
+        Image description: offroad car++, forest, sunset, clouds
+
+        Description: polaroid night photo of 24 y.o woman  
+        Image description: polaroid photo++, night photo++, 24 y.o++, beautiful woman++, pale skin, bokeh, motion blur
         ---
         Description: {{ description }}
         Image description:
