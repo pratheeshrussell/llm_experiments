@@ -49,8 +49,8 @@ IMAGE_GEN_PROMPT = PromptTemplate(
         - Generate a list of realistic descriptive keywords to illustrate this scene, separated by commas. 
         - If there are people or characters present, add any discernable details like age range, gender, ethnicity, number present, poses, facial emotions, clothing and accessories as keyword. 
         - If no people/characters, then add any notable animals, objects, buildings, plantlife or landscape features like trees, forests, fields etc. 
-        - As the descriptors increase in importance to emphazise the essence of the scene, attach additional '+' symbols after each keyword.
-        - If a keyword should be deemphasized in the image, place a '-' symbol after it.
+        - As the descriptors increase in importance to emphazise the essence of the scene, attach additional '+' symbols after each keyword without space.
+        - If a keyword should be deemphasized in the image, place a '-' symbol after it without space.
         - Don't add symbols like '#' and '~' only '+','-',',' are allowed
         - If an image frame/style is specified, emphasize keywords to depict the scene from that perspective.
         - Focus the list on pertinent keywords necessary to visualize the scene, with no less than 10 and no more than 25 descriptors
