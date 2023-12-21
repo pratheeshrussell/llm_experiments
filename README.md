@@ -39,9 +39,13 @@ Download and place it in models folder
 * https://github.com/huggingface/diffusers/issues/4194#issuecomment-1648741638
 * https://medium.com/mlearning-ai/using-civitai-models-with-diffusers-package-45e0c475a67e
 
+## Stable Diffusion
+* https://jalammar.github.io/illustrated-stable-diffusion/?ref=blog.segmind.com
+
 ## Upscaler
 * https://stable-diffusion-art.com/ai-upscaler/
 
 ## Issues
 1. Truncated to 77 Tokens
 * https://medium.com/mlearning-ai/using-long-prompts-with-the-diffusers-package-with-prompt-embeddings-819657943050
+* https://github.com/huggingface/diffusers/issues/2136#issuecomment-1811947735
