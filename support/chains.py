@@ -45,7 +45,7 @@ def generate_image_description(llm: LLM, desc: str) -> str:
     )
     return chain.run({
         "description": desc
-    }).strip()
+    }).strip().replace(" +", "+").replace(" -", "-")
 
 def generate_image(description: str) -> str:
     """

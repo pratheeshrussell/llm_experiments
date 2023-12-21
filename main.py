@@ -10,6 +10,11 @@ description = generate_image_description(llm, topic)
 
 description_Text=description
 print(description_Text)
+
+# Free memory
+del llm
+gc.collect()
+# exit(0)
 image_path = generate_image(description_Text)
 
 # Just print the result
@@ -22,5 +27,3 @@ result={
 for keys, value in result.items():
    print((keys + ' => ' + value).encode())
 
-del llm
-gc.collect()
