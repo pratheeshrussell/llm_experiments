@@ -2,7 +2,7 @@
 
 ## Install
 ```
-pip install diffusers transformers omegaconf accelerate langchain compel  llama-cpp-python
+pip install diffusers transformers omegaconf accelerate xformers langchain compel  llama-cpp-python
 ```
 To install torch use the following link (If you have Graphics card use cuda enabled version or cpu only version)  
 https://pytorch.org/get-started/locally/  
