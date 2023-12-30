@@ -33,6 +33,13 @@ Download and place it in models folder
 -- Needed only if you download from sources other than hugging face -- Also local files doesn't seem to work in windows
 * https://civitai.com/models/25694/epicrealism
 
+## Model repo from Hugging face
+* runwayml/stable-diffusion-v1-5  
+* emilianJR/epiCRealism  
+* Justin-Choo/epiCRealism-Natural_Sin_RC1_VAE  
+* Lykon/dreamshaper-8  
+* digiplay/Juggernaut_final  
+
 ## Links:
 * https://github.com/gabacode/InspirationAI/tree/main
 * https://github.com/huggingface/diffusers/issues/3694#issuecomment-1593845649
