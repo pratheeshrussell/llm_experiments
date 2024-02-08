@@ -8,32 +8,27 @@ from datetime import datetime
 from diffusers import StableDiffusionPipeline, EulerDiscreteScheduler
 
 import os
+import random
 from compel import Compel
+from transformers import pipeline, set_seed
+from langchain_community.llms.huggingface_pipeline import HuggingFacePipeline
 
-def generate_quote(llm: LLM, topic: str) -> str:
+def generate_image_prompt(starting_text: str) -> str:
     """
-    Generates a quote using the LLM model.
+    Generates the image prompt using the LLM model.
     """
-    chain = LLMChain(
-        llm=llm,
-        prompt=QUOTE_PROMPT
-    )
-    return chain.run({
-        "topic": topic
-    }).strip()
+    gpt2_pipe = pipeline('text-generation', 
+        model='Gustavosta/MagicPrompt-Stable-Diffusion', 
+        tokenizer='gpt2')
+    # hf = HuggingFacePipeline(pipeline=gpt2_pipe)
+    seed = random.randint(100, 1000000)
+    set_seed(seed)
 
-
-def generate_caption(llm: LLM, quote: str) -> str:
-    """
-    Generates a description of the image using the LLM model.
-    """
-    chain = LLMChain(
-        llm=llm,
-        prompt=CAPTION_PROMPT
-    )
-    return chain.run({
-        "quote": quote
-    }).strip()
+    response = gpt2_pipe(starting_text,
+                     max_length=1000, 
+                     pad_token_id=gpt2_pipe.tokenizer.eos_token_id, 
+                     num_return_sequences=1)
+    return response[0].get('generated_text')
 
 def generate_image_description(llm: LLM, desc: str) -> str:
     """
@@ -57,25 +52,19 @@ def generate_image(description: str) -> str:
     negative_prompt="verybadimagenegative_v1.3, ng_deepnegative_v1_75t, (ugly face:0.8),cross-eyed,sketches, (worst quality:2), (low quality:2), (normal quality:2), lowres, normal quality, ((monochrome)), ((grayscale)), skin spots, acnes, skin blemishes, bad anatomy, DeepNegative, facing away, tilted head, {Multiple people}, lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worstquality, low quality, normal quality, jpegartifacts, signature, watermark, username, blurry, bad feet, cropped, poorly drawn hands, poorly drawn face, mutation, deformed, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, extra fingers, fewer digits, extra limbs, extra arms,extra legs, malformed limbs, fused fingers, too many fingers, long neck, cross-eyed,mutated hands, polar lowres, bad body, bad proportions, gross proportions, text, error, missing fingers, missing arms, missing legs, extra digit, extra arms, extra leg, extra foot, ((repeating hair))"
     img_width=768
     img_height=768
-    inference_steps=20
+    inference_steps=50
     guidance_scale=7
-
-    max_length=77 # the size allowed - Dont change
+    seed=random.randint(100, 1000000)
 
     # Using repo path
-    repo_path="Justin-Choo/epiCRealism-Natural_Sin_RC1_VAE"
+    repo_path="digiplay/Juggernaut_final"
     pipe = StableDiffusionPipeline.from_pretrained(
         repo_path,
         torch_dtype=torch.float32,
         use_safetensors=True,)
+    pipe.safety_checker = None
     pipe.scheduler = EulerDiscreteScheduler.from_config(pipe.scheduler.config)
-    model_path="models/epicrealism.safetensors"
-    # sometimes it works but mostly this doesn't work
-    # pipe=StableDiffusionPipeline.from_single_file(
-    #     model_path, 
-    #     use_safetensors=True,
-    #     load_safety_checker=False)
-
+    
     # Tokenizer long prompt issues
     compel = Compel(
         tokenizer=pipe.tokenizer, 
@@ -86,10 +75,11 @@ def generate_image(description: str) -> str:
     negative_conditioning = compel.build_conditioning_tensor(negative_prompt)
     [prompt_embeds, negative_prompt_embeds] = compel.pad_conditioning_tensors_to_same_length([conditioning, negative_conditioning])
 
-    print(prompt_embeds.shape)
-    print(negative_prompt_embeds.shape)
+    #print(prompt_embeds.shape)
+    #print(negative_prompt_embeds.shape)
     # generate args
     # Atleast an empty "negative_prompt_embeds" is needed
+    generator = torch.Generator("cpu").manual_seed(seed)
     new_args = {
         "prompt_embeds":prompt_embeds,
         "negative_prompt_embeds": negative_prompt_embeds,
@@ -97,10 +87,11 @@ def generate_image(description: str) -> str:
         "height": img_height,
         "guidance_scale":guidance_scale,
         "num_inference_steps":inference_steps,
-        "num_images_per_prompt":1
+        "num_images_per_prompt":1,
+        "generator":generator
     }
 
-    # pipe.enable_sequential_cpu_offload()
+    pipe.enable_sequential_cpu_offload()
     image = pipe(**new_args).images[0]
 
     image_path = "image/" + datetime.now().strftime("%Y-%m-%d-%H-%M-%S") + ".jpg"

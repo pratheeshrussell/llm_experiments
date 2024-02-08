@@ -30,15 +30,18 @@ In windows local model didnt run at all - maybe a path problem
 Download and place it in models folder
 * Q4_K_M - https://huggingface.co/TheBloke/Mistral-7B-Merge-14-v0.1-GGUF
 
--- Needed only if you download from sources other than hugging face -- Also local files doesn't seem to work in windows
+-- Image generation models should be downloaded from hugging face directly  
 * https://civitai.com/models/25694/epicrealism
 
 ## Model repo from Hugging face
+### Image generation models
 * runwayml/stable-diffusion-v1-5  
 * emilianJR/epiCRealism  
 * Justin-Choo/epiCRealism-Natural_Sin_RC1_VAE  
 * Lykon/dreamshaper-8  
-* digiplay/Juggernaut_final  
+* digiplay/Juggernaut_final 
+### Prompt generation model
+*  Gustavosta/MagicPrompt-Stable-Diffusion  
 
 ## Links:
 * https://github.com/gabacode/InspirationAI/tree/main
