@@ -92,8 +92,8 @@ def generate_image(description: str) -> str:
     }
 
     pipe.enable_sequential_cpu_offload()
-    image = pipe(**new_args).images[0]
-
+    images = pipe(**new_args).images
+    image=images[0]
     image_path = "image/" + datetime.now().strftime("%Y-%m-%d-%H-%M-%S") + ".jpg"
     image.save(image_path)
 
@@ -101,5 +101,6 @@ def generate_image(description: str) -> str:
     # torch.cuda.empty_cache()
     gc.collect()
     return {
-        "path": image_path
+        "path": image_path,
+        "image":images
     }

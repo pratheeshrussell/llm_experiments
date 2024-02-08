@@ -4,6 +4,10 @@
 ```
 pip install diffusers transformers omegaconf accelerate xformers langchain compel  llama-cpp-python
 ```
+you can also install gradio to use the gradio_interface.py
+```
+pip install gradio
+```
 To install torch use the following link (If you have Graphics card use cuda enabled version or cpu only version)  
 https://pytorch.org/get-started/locally/  
    
